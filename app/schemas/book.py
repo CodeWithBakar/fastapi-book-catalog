@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional
+from datetime import datetime
 
 
 class BookBase(BaseModel):
@@ -32,10 +33,12 @@ class BookUpdate(BookBase):
 class BookInDB(BookBase):
     """
     Pydantic model for representing a book as it is stored in the database.
-    Includes the 'id' field.
+    Includes the 'id' and timestamp fields.
     """
 
     id: int
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         # This allows the model to be created from ORM instances.
