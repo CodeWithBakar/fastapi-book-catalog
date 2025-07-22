@@ -19,9 +19,7 @@ class BookService:
 
     async def get_all_books(self, skip: int = 0, limit: int = 100) -> List[Book]:
         """Asynchronously retrieves all books."""
-        # In a real-world scenario with an async database driver (like asyncpg),
-        # this is where you would use `await`. With SQLite, the async benefit
-        # is primarily in allowing other non-blocking tasks to run.
+
         return self.repo.get_all_books(skip, limit)
 
     def create_book(self, book: BookCreate) -> Book:
