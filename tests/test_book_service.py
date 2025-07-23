@@ -1,5 +1,3 @@
-# tests/test_book_service.py
-
 import time
 from datetime import datetime
 from app.services.book_service import BookService
