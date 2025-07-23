@@ -1,35 +1,38 @@
 import pytest
-from sqlalchemy import create_engine, event
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.db.base import Base
 
-TEST_DB_CONNECTION_STRING = "sqlite:///C:/Users/User/OneDrive/Desktop/book-catalog-api/tests/test_book_catalog.db"
-if not TEST_DB_CONNECTION_STRING:
-    raise ValueError("TEST_DB_CONNECTION_STRING is not set in the .env file!")
 
-engine = create_engine(TEST_DB_CONNECTION_STRING)
+SQLALCHEMY_DATABASE_URL = "sqlite:///C:/Users/User/OneDrive/Desktop/book-catalog-api/tests/test_book_catalog.db"
+
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_test_db():
-    Base.metadata.drop_all(bind=engine)
+    """
+    A session-scoped fixture to create all database tables once before any tests run,
+    and drop them all after all tests have completed.
+    """
     Base.metadata.create_all(bind=engine)
     yield
     Base.metadata.drop_all(bind=engine)
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def db():
+    """
+    A function-scoped fixture that provides a transactional scope for each test.
+    This pattern ensures that each test runs in isolation and any changes are
+    rolled back after the test completes.
+    """
     connection = engine.connect()
     transaction = connection.begin()
     session = TestingSessionLocal(bind=connection)
-    session.begin_nested()
-
-    @event.listens_for(session, "after_transaction_end")
-    def restart_savepoint(sess, trans):
-        if trans.nested and not trans._parent.nested:
-            sess.begin_nested()
 
     try:
         yield session
