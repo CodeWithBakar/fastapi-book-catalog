@@ -1,5 +1,3 @@
-# tests/fixtures/book_fixtures.py
-
 import pytest
 from app.models.book import Book
 
