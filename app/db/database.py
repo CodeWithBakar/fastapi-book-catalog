@@ -1,8 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-# Define the database URL for SQLite.
-# The database file will be created in the same directory.
+# database URL for SQLite.
 SQLALCHEMY_DATABASE_URL = (
     "sqlite:///C:/Users/User/OneDrive/Desktop/book-catalog-api/app/db/book_catalog.db"
 )
