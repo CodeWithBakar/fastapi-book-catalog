@@ -1,6 +1,3 @@
-# tests/test_book_api.py
-
-
 class TestBookAPI:
     """Test suite for the Book API endpoints."""
 
